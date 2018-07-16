@@ -1,0 +1,33 @@
+
+tomcat:
+  image: registry.cn-hangzhou.aliyuncs.com/xmjdt/deviceplatform:1.0
+  volumes:
+  - /home/file/deviceplatform:/home/file
+  links:
+  - mysql:mysql
+  expose:
+  - 8080
+  - 8000
+  labels:
+    io.rancher.container.pull_image: always
+
+lb:
+  image: rancher/lb-service-haproxy:v0.9.1
+  ports:
+  - 40010:40010/tcp
+  - 48000:48000/tcp
+  labels:
+    io.rancher.container.agent.role: environmentAdmin
+    io.rancher.container.create_agent: 'true'
+
+mysql:
+  image: mysql:5.7
+  environment:
+    MYSQL_DATABASE: root
+    MYSQL_ROOT_PASSWORD: Deviceplatform2018
+  volumes:
+  - /home/db/mysql/deviceplatform:/var/lib/mysql
+  ports:
+  - 13306:3306/tcp
+  expose:
+  - 3306
